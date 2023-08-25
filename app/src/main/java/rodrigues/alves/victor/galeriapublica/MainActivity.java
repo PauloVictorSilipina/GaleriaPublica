@@ -7,7 +7,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.RadialGradient;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -77,6 +80,32 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         final List<String> permissionsRejected = new ArrayList<>();
+        if(requestCode == RESULT_REQUEST_PERMISSION) {
+            for(String permission : permissions) {
+                if(!hasPermission(permission)) {
+                    permissionsRejected.add(permission);
+                }
+            }
+        }
+
+        if(permissionsRejected.size() > 0) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if(shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
+                    new AlertDialog.Builder(MainActivity.this).setMessage("Para usar esse aplicativo é preciso conceder essas permissões").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            requestPermissions(permissionsRejected.toArray(new String[permissionsRejected.size()]), RESULT_REQUEST_PERMISSION);
+                        }
+
+                    }).create().show();
+                }
+            }
+            else {
+                MainViewModel vm = new ViewModelProvider(this).get(MainViewModel.class);
+                int navigationOpSelected = vm.getNavigatonOpSelected();
+                bottomNavigationView.setSelectedItemId(navigationOpSelected);
+            }
+        }
     }
 
     @Override
