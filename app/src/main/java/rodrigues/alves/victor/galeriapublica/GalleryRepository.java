@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +23,9 @@ public class GalleryRepository {
         this.context = context;
     }
     public List<ImageData> loadImageData(Integer limit, Integer offSet) throws FileNotFoundException {
+        List<ImageData> imageDataList = new ArrayList<>();
         int w = (int)context.getResources().getDimension(R.dimen.im_width);
+
         int h = (int)context.getResources().getDimension(R.dimen.im_height);
 
         String[] projection = new String[][ MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME,
