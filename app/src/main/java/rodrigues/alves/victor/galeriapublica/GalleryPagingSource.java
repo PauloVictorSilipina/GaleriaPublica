@@ -47,6 +47,26 @@ public class GalleryPagingSource extends ListenableFuturePagingSource<Integer, I
         } else {
             offSet = ((nextPageNumber - 1) * loadParams.getLoadSize()) + (initialLoadSize - loadParams.getLoadSize());
         }
-        ListeningExecutorService service = MoreExecutors
+        ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
+        Integer finalOffSet = offSet;
+        Integer finalNextPageNumber = nextPageNumber;
+        ListenableFuture<LoadResult<Integer, ImageData>> lf = service.submit(new Callable<LoadResult<Integer, ImageData>>() {
+            @Override
+            public LoadResult<Integer, ImageData> call() {
+                List<ImageData> imageDataList = null;
+                try {
+                    imageDataList = galleryRepository.loadImageData(loadParams.getLoadSize(), finalOffSet);
+                    Integer nextKey = null;
+                    if(imageDataList.size() >= loadParams.getLoadSize()) {
+                        nextKey = finalNextPageNumber+1;
+                    }
+
+                    return new LoadResult.Page<Integer, ImageData>(imageDataList, null, nextKey);
+                } catch (FileNotFoundException e) {
+                    return new LoadResult.Error<>(e);
+                }
+            }
+        });
+        return lf;
     }
 }
