@@ -33,7 +33,7 @@ public class MainViewModel extends AndroidViewModel {
         return navigatonOpSelected;
     }
 
-    public void setNavigatonOpSelected (int NavigationOpSelected) {
+    public void setNavigationOpSelected (int NavigationOpSelected) {
         this.navigatonOpSelected= navigatonOpSelected;
     }
 }

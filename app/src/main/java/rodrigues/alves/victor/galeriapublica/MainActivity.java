@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onResume () {
         super.onResume();
-        List<String> permissions = new ArrayList<>;
+        List<String> permissions = new ArrayList<>();
         permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         checkForPermissions(permissions);
     }
@@ -73,10 +73,11 @@ public class MainActivity extends AppCompatActivity {
             int navigationOpSelected = vm.getNavigatonOpSelected();
             bottomNavigationView.setSelectedItemId(navigationOpSelected);
         }
+    return false;
     }
 
     @Override
-    public void onRequestPermissionResult (int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult (int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         final List<String> permissionsRejected = new ArrayList<>();
@@ -112,23 +113,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         final MainViewModel vm = new ViewModelProvider(this).get(MainViewModel.class);
-
         bottomNavigationView = findViewById(R.id.btNav);
-        bottomNavigationView.setOnApplyWindowInsetsListener(new NavigationBarView.OnItemSelectedListener() {
+        bottomNavigationView.setOnItemSelectedListener(new
+                                                               NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                vm.setNavigatonOpSelected(item.getItemId());
+                vm.setNavigationOpSelected(item.getItemId());
                 switch (item.getItemId()) {
                     case R.id.gridViewOp:
                         GridViewFragment gridViewFragment = GridViewFragment.newInstance();
                         setFragment(gridViewFragment);
                         break;
-                    case R.id.listViewOp:
-                        ListViewFragment listViewFragment = ListViewFragment.newInstance();
-                        setFragment(listViewFragment);
-                        break;
+                        case R.id.listViewOp:
+                            ListViewFragment listViewFragment =
+                                    ListViewFragment.newInstance();
+                            setFragment(listViewFragment);
+                            break;
                 }
                 return true;
             }

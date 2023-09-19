@@ -11,6 +11,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.PagingData;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,9 +53,14 @@ public class ListViewFragment extends Fragment {
         LiveData<PagingData<ImageData>> liveData = mViewModel.getPageLv();
         liveData.observe(getViewLifecycleOwner(), new Observer<PagingData<ImageData>>() {
             @Override
-            public void onChanged(PagingData<ImageData> imageDataPagingData) {
-                listAdapter.submitData(getViewLifecycleOwner().getLifecycle());
+            public void onChanged(PagingData<ImageData> objectPagingData) {
+                listAdapter.submitData(getViewLifecycleOwner().getLifecycle(), objectPagingData);
             }
         });
+
+        RecyclerView rvGallery = (RecyclerView) view.findViewById(R.id.rvList);
+        rvGallery.setAdapter(listAdapter);
+        rvGallery.setLayoutManager(new LinearLayoutManager(getContext()));
     }
+
 }
